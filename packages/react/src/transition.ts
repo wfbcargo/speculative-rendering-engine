@@ -36,11 +36,20 @@ export function withViewTransition(
     update();
     return { finished: Promise.resolve(), skipped: true };
   }
-  const transition = doc!.startViewTransition!(() => {
-    update();
-  });
-  return {
-    finished: transition.finished.then(() => undefined),
-    skipped: false,
-  };
+  let ran = false;
+  try {
+    const transition = doc!.startViewTransition!(() => {
+      ran = true;
+      update();
+    });
+    return {
+      finished: transition.finished.then(() => undefined).catch(() => undefined),
+      skipped: false,
+    };
+  } catch {
+    if (!ran) {
+      update();
+    }
+    return { finished: Promise.resolve(), skipped: true };
+  }
 }

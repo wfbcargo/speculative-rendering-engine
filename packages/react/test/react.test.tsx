@@ -8,7 +8,7 @@ import {
 } from "@testing-library/react";
 import { createDefaultPredictor } from "@sre/core";
 import type { Intent } from "@sre/core";
-import { defineSpeculativeUI } from "../src/index";
+import { defineSpeculativeUI, withViewTransition } from "../src/index";
 
 interface PageData {
   title: string;
@@ -241,5 +241,40 @@ describe("defineSpeculativeUI", () => {
       data: intentB,
     });
     expect(model.predict({}).map((p) => p.intent.key)).toContain("page:a");
+  });
+});
+
+describe("withViewTransition", () => {
+  it("swallows an aborted transition rejection and still updates", async () => {
+    const doc = globalThis.document as unknown as {
+      startViewTransition?: (cb: () => void) => { finished: Promise<void> };
+    };
+    let updated = false;
+    doc.startViewTransition = (cb) => {
+      cb();
+      return { finished: Promise.reject(new Error("aborted")) };
+    };
+    const handle = withViewTransition(() => {
+      updated = true;
+    });
+    delete doc.startViewTransition;
+    expect(updated).toBe(true);
+    await expect(handle.finished).resolves.toBeUndefined();
+  });
+
+  it("falls back to a plain update when startViewTransition throws", async () => {
+    const doc = globalThis.document as unknown as {
+      startViewTransition?: () => { finished: Promise<void> };
+    };
+    let updated = false;
+    doc.startViewTransition = () => {
+      throw new Error("invalid state");
+    };
+    const handle = withViewTransition(() => {
+      updated = true;
+    });
+    delete doc.startViewTransition;
+    expect(updated).toBe(true);
+    await expect(handle.finished).resolves.toBeUndefined();
   });
 });
