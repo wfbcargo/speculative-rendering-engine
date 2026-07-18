@@ -37,7 +37,8 @@ with "Cannot find module '@sre/core'" if nothing is built. Run `pnpm -r build` f
 authoritative order is build -> typecheck -> test. (Source-alias consumers like the demo can
 sidestep this via `tsconfig` `paths` / Vite aliases to source.)
 
-## Fan-out normalization is not optional
+## Fan-out normalization keeps clusters tight
 Spreading activation divides each contribution by the source node's out-degree. Without it, hub
 concepts bonded to many components over-broadcast and the whole graph lights up uniformly (no useful
-prediction). It is the knob that keeps clusters tight. See ADR 0004.
+prediction). It is on by default (`fanOut: true`); turning it off (`fanOut: false`) is only for
+demonstrating that failure mode, never production. It is the knob that keeps clusters tight. See ADR 0004.

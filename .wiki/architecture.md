@@ -48,7 +48,7 @@ computation, or rendered UI alike.
   forwarded to the engine predictor so history-learning predictors work end-to-end (see
   [decisions/0003](./decisions/0003-facade-learning-api.md)). The primary API.
 - `context.tsx` - `SpeculationProvider`, engine context.
-- `hooks.ts` - `useSpeculation`, `useTrajectory`, `useObserve`, `useSetContext`.
+- `hooks.ts` - `useSpeculation`, `useTrajectory`, `useObserve`, `useSetContext`, `useEngine`.
 - `commit.ts` - `useCommit`, `useTransitionalCommit`.
 - `materializer.ts` - `createReactMaterializer` (the materialize rung's React bridge).
 - `Stage.tsx` - `SpeculationStage`, renders the committed intent; must be inside the provider.

@@ -72,9 +72,11 @@ Iterative propagation from seeded nodes:
 - **Geometric per-hop decay.** `A[j] += A[i] * W[i,j] * D`, default **D = 0.25** (aggressive/local
   on purpose: a UI predictor wants tight, confident clusters, not diffuse warming; 2 hops and it is
   effectively dead).
-- **Fan-out normalization (REQUIRED).** Divide each contribution by the source node's out-degree
+- **Fan-out normalization (on by default).** Divide each contribution by the source node's out-degree
   (`* 1 / deg_out(i)`): the fan effect. Without it, hub concepts (bonded to many components)
   over-broadcast. This is the knob that makes the "spread to all nodes within report" example behave.
+  Exposed as the `fanOut` config flag (default `true`); disabling it (`fanOut: false`) is reserved for
+  demonstrating the over-broadcast failure mode and degrades prediction quality in production.
 - **Firing threshold F.** A node whose newly-received activation is below F does not propagate
   further (and, below a floor, is dropped).
 - **Hop cap.** `maxHops` (default 3) bounds propagation regardless of decay.
@@ -82,8 +84,11 @@ Iterative propagation from seeded nodes:
 ### Temporal decay (base-level)
 
 Orthogonal to relational decay. Node base-level activation and learned-edge weight decay over **time
-since last reinforcement** by a **power law** (t^-d, the ACT-R form, not exponential), so a concept
-lit a while ago cools and unused learned edges fade. Parameterized by a half-life in clock units.
+since last reinforcement** by a **hyperbolic half-life** law: `factor = halfLife / (halfLife + elapsed)`,
+equivalently `(1 + elapsed / halfLife)^-1`. This is non-exponential (activation at two half-lives is
+`1/3`, not `1/4`) and honors the configured half-life, so a concept lit a while ago cools and unused
+learned edges fade. Parameterized by a half-life in clock units (`temporalHalfLife` / `forgetHalfLife`).
+The general ACT-R power law (`t^-d` with a tunable exponent) is a later avenue behind the same config.
 
 ### Determinism (R-002)
 

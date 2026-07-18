@@ -237,6 +237,32 @@ describe("createGraphPredictor", () => {
     expect(level(200)).not.toBeCloseTo(0.25, 3);
   });
 
+  it("decays concept activation by elapsed time regardless of predict cadence", () => {
+    const { predictor, clock } = build({
+      nodes: [conceptNode("Reporting")],
+      edges: [],
+      rules: [
+        { action: "use", target: "report", concept: "Reporting", gain: 1 },
+      ],
+      decay: { temporalHalfLife: 100 },
+    });
+
+    predictor.observe({ type: "use", at: 0, data: "report" });
+
+    clock.set(100);
+    predictor.predict({});
+    clock.set(150);
+    predictor.predict({});
+    clock.set(200);
+    predictor.predict({});
+
+    const level =
+      predictor.conceptActivation(200).find((c) => c.concept === "Reporting")
+        ?.level ?? 0;
+    expect(level).toBeCloseTo(1 / 3, 10);
+    expect(level).not.toBeCloseTo(0.25, 3);
+  });
+
   it("creates a learned edge only after the support threshold", () => {
     const config = {
       nodes: [componentNode("a"), componentNode("b")],
