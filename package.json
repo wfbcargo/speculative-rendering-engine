@@ -1,0 +1,22 @@
+{
+  "name": "speculative-rendering-engine",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A speculative-execution runtime for UIs: predict the next intent, pre-warm it during idle time, reveal it instantly on commit.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "model": "claude-opus-4-8",
+  "fallbackModel": ["claude-opus-4-8"],
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-8",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "teammateMode": "in-process",
+  "extraKnownMarketplaces": {
+    "paul-claude-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "wfbcargo/PaulClaudePlugins"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "claude-architect@paul-claude-plugins": true
+  },
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Read",
+      "Write",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(jq:*)",
+      "Bash(echo:*)",
+      "Bash(printf:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(openssl rand:*)",
+      "Bash(pnpm:*)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(node:*)",
+      "Bash(corepack:*)",
+      "Bash(git status:*)",
+      "Bash(git branch:*)",
+      "Bash(git worktree:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git merge:*)",
+      "Bash(git fetch:*)",
+      "Bash(git push:*)",
+      "Bash(git tag:*)",
+      "Bash(git show:*)",
+      "Bash(git stash:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git restore:*)",
+      "Bash(git rm:*)",
+      "Bash(git -C *)",
+      "Bash(gh pr:*)",
+      "Bash(gh repo:*)",
+      "Bash(gh auth status:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git checkout *)"
+    ]
+  }
+}
