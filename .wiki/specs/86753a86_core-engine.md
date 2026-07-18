@@ -18,7 +18,7 @@ blocking foundation the graph predictor (Spec B) and the React facade (Spec C) b
 
 ## Deliverables
 
-1. **`src/types.ts`** — the single source of truth for shared types:
+1. **`src/types.ts`** - the single source of truth for shared types:
    - `Intent` = `{ kind: string; key: string; payload?: unknown }`.
    - `Signal` = `{ type: string; at: number; data?: unknown }`.
    - `Prediction` = `{ intent: Intent; probability: number }`.
@@ -29,20 +29,20 @@ blocking foundation the graph predictor (Spec B) and the React facade (Spec C) b
    - `Clock` = `{ now(): number }`; `IdleScheduler` = `{ schedule(task): handle; cancel(handle): void }` (shape at implementer's discretion, but manual + system variants must satisfy it).
    - `BudgetPolicy`, `BudgetSnapshot`, `TelemetryEvent`, `CommitResult`.
    Keep names aligned with `.wiki/architecture.md` and `.wiki/glossary.md`.
-2. **`src/clock.ts`** — `systemClock` (wraps whatever time base the host injects; the default may read a monotonic source) and `createManualClock(start?)` (advanceable) for tests. No `Date.now()` in any engine path (R-002); `systemClock` is the single sanctioned boundary.
-3. **`src/scheduler.ts`** — `createIdleScheduler` (production; may use `requestIdleCallback`/`setTimeout` fallback, isolated here) and `createManualScheduler` (tests: tasks queue and run only when drained). The engine takes the scheduler by injection.
-4. **`src/budget.ts`** — `createFixedBudget(caps)` and `createAdaptiveBudget(opts)` (device/concurrency-aware caps governing how many speculations occupy each rung). Pure given inputs.
-5. **`src/metrics.ts`** — `createMetricsCollector(options?)`: records commits (warm/cold), exposes a hit-rate snapshot and a **bounded rolling `hitRateHistory()`** series (capacity via `MetricsCollectorOptions`). Deterministic.
-6. **`src/predictor.ts`** — `createDefaultPredictor()`: first-order Markov over component transitions. Implements `Predictor`; `learn(from, to)` accumulates transition counts; `predict(context)` returns ranked normalized `{ intent, probability }` from `context.current`/`context.prior`/history. Deterministic; no wall-clock.
-7. **`src/engine.ts`** — `createEngine(config)` returning `SpeculationEngine`. Responsibilities:
+2. **`src/clock.ts`** - `systemClock` (wraps whatever time base the host injects; the default may read a monotonic source) and `createManualClock(start?)` (advanceable) for tests. No `Date.now()` in any engine path (R-002); `systemClock` is the single sanctioned boundary.
+3. **`src/scheduler.ts`** - `createIdleScheduler` (production; may use `requestIdleCallback`/`setTimeout` fallback, isolated here) and `createManualScheduler` (tests: tasks queue and run only when drained). The engine takes the scheduler by injection.
+4. **`src/budget.ts`** - `createFixedBudget(caps)` and `createAdaptiveBudget(opts)` (device/concurrency-aware caps governing how many speculations occupy each rung). Pure given inputs.
+5. **`src/metrics.ts`** - `createMetricsCollector(options?)`: records commits (warm/cold), exposes a hit-rate snapshot and a **bounded rolling `hitRateHistory()`** series (capacity via `MetricsCollectorOptions`). Deterministic.
+6. **`src/predictor.ts`** - `createDefaultPredictor()`: first-order Markov over component transitions. Implements `Predictor`; `learn(from, to)` accumulates transition counts; `predict(context)` returns ranked normalized `{ intent, probability }` from `context.current`/`context.prior`/history. Deterministic; no wall-clock.
+7. **`src/engine.ts`** - `createEngine(config)` returning `SpeculationEngine`. Responsibilities:
    - Hold the speculation pool; on new predictions, reconcile: promote toward each bet's target rung within budget along an injected ladder, demote/evict bets that fell out of prediction or budget.
    - `observe(signal)` forwards to `predictor.observe`; `setContext`/`predict` drive reconciliation.
    - `commit(intent)`: reveal the matching warm speculation instantly (`CommitResult` with `warm: true`) or prepare cold (`warm: false`); flush wrong bets; call `predictor.learn(prior, intent)`; record metrics; append to trajectory.
    - All timing via injected `clock`; all deferred work via injected `scheduler`. Emit `TelemetryEvent`s.
-8. **`src/trajectory.ts`** — committed-path tracking + `computeReturnCandidates(trajectory, opts)` (recently departed states graded by recency, kept warm so undo/redo resolve instantly).
-9. **`src/prefetch.ts`** — `createPrefetchLevel(fetch)`: a reusable async ladder level (the prefetch rung) usable by consumers/adapters.
-10. **`src/testing.ts`** (`@sre/core/testing`) — `createTestHarness(config?)` wiring a `createManualClock` + `createManualScheduler` + engine, and `drain(harness)` to run all pending idle tasks to quiescence deterministically. The canonical way to test the engine.
-11. **`src/index.ts`** — re-export the public surface (types, `createEngine`, predictors, budget, metrics, clock/scheduler factories, trajectory, prefetch). `testing.ts` is exported via the separate `./testing` entry, not from index.
+8. **`src/trajectory.ts`** - committed-path tracking + `computeReturnCandidates(trajectory, opts)` (recently departed states graded by recency, kept warm so undo/redo resolve instantly).
+9. **`src/prefetch.ts`** - `createPrefetchLevel(fetch)`: a reusable async ladder level (the prefetch rung) usable by consumers/adapters.
+10. **`src/testing.ts`** (`@sre/core/testing`) - `createTestHarness(config?)` wiring a `createManualClock` + `createManualScheduler` + engine, and `drain(harness)` to run all pending idle tasks to quiescence deterministically. The canonical way to test the engine.
+11. **`src/index.ts`** - re-export the public surface (types, `createEngine`, predictors, budget, metrics, clock/scheduler factories, trajectory, prefetch). `testing.ts` is exported via the separate `./testing` entry, not from index.
 12. **Tests** (`vitest`, via `@sre/core/testing`): lifecycle (predict -> promote -> commit warm hit; wrong-bet eviction; budget caps enforced), Markov history bias accumulates across repeated commits, metrics hit-rate + rolling history, return-candidates. All deterministic (manual clock + scheduler), no real timers, no DOM.
 
 ## Acceptance criteria

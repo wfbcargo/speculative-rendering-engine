@@ -6,20 +6,20 @@ true.
 
 ## Index
 
-- [architecture.md](./architecture.md) — package layout, module boundaries, data flow.
-- [conventions.md](./conventions.md) — coding conventions, naming, formatting.
-- [rules.md](./rules.md) — active project rules read by every sub-agent at spawn.
-- [gotchas.md](./gotchas.md) — non-obvious pitfalls.
-- [glossary.md](./glossary.md) — domain terms.
-- [decisions/](./decisions/) — architectural decision records (ADR-style).
-- [specs/](./specs/) — per-spec notes that outlive their branch.
+- [architecture.md](./architecture.md) - package layout, module boundaries, data flow.
+- [conventions.md](./conventions.md) - coding conventions, naming, formatting.
+- [rules.md](./rules.md) - active project rules read by every sub-agent at spawn.
+- [gotchas.md](./gotchas.md) - non-obvious pitfalls.
+- [glossary.md](./glossary.md) - domain terms.
+- [decisions/](./decisions/) - architectural decision records (ADR-style).
+- [specs/](./specs/) - per-spec notes that outlive their branch.
 
 ## Orientation (not wiki content, but where to start)
 
-- `README.md` (repo root) — what SRE is and the core concepts.
-- `AGENTS.md` (repo root) — the usage contract: the golden path and the facade config.
-- `HANDOFF.md` (repo root) — bootstrap context for a fresh session.
-- `packages/react/src/defineSpeculativeUI.tsx` — the facade, the primary entry point (once built).
+- `README.md` (repo root) - what SRE is and the core concepts.
+- `AGENTS.md` (repo root) - the usage contract: the golden path and the facade config.
+- `HANDOFF.md` (repo root) - bootstrap context for a fresh session.
+- `packages/react/src/defineSpeculativeUI.tsx` - the facade, the primary entry point (once built).
 
 ## Scope (v0.1, fresh start)
 

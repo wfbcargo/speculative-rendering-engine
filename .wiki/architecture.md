@@ -23,36 +23,36 @@ computation, or rendered UI alike.
 
 ## @sre/core layout
 
-- `types.ts` — all shared types (`Intent`, `Signal`, `Prediction`, `Speculation`, `LadderLevel`,
+- `types.ts` - all shared types (`Intent`, `Signal`, `Prediction`, `Speculation`, `LadderLevel`,
   `Clock`, `IdleScheduler`, `BudgetPolicy`, `TelemetryEvent`, ...). Single source of truth.
-- `engine.ts` — the lifecycle: predict -> reconcile -> promote/demote/evict -> commit.
+- `engine.ts` - the lifecycle: predict -> reconcile -> promote/demote/evict -> commit.
   `createEngine`, `SpeculationEngine`, `CommitResult`.
-- `predictor.ts` — `createDefaultPredictor` (first-order Markov).
-- `graph-predictor.ts` — `createGraphPredictor`, `defaultConcepts`, and the `Graph*` type surface:
+- `predictor.ts` - `createDefaultPredictor` (first-order Markov).
+- `graph-predictor.ts` - `createGraphPredictor`, `defaultConcepts`, and the `Graph*` type surface:
   spreading-activation over a typed weighted knowledge graph (see
   [decisions/0004](./decisions/0004-graph-activation-predictor.md)).
-- `budget.ts` — `createFixedBudget`, `createAdaptiveBudget` (device/concurrency caps).
-- `trajectory.ts` — committed path + `computeReturnCandidates` (undo/redo as warm speculations).
-- `prefetch.ts` — async prefetch ladder level (`createPrefetchLevel`).
-- `metrics.ts` — `createMetricsCollector`, hit-rate snapshots, and a bounded rolling hit-rate series
+- `budget.ts` - `createFixedBudget`, `createAdaptiveBudget` (device/concurrency caps).
+- `trajectory.ts` - committed path + `computeReturnCandidates` (undo/redo as warm speculations).
+- `prefetch.ts` - async prefetch ladder level (`createPrefetchLevel`).
+- `metrics.ts` - `createMetricsCollector`, hit-rate snapshots, and a bounded rolling hit-rate series
   (`hitRateHistory()`, capacity via `MetricsCollectorOptions`).
-- `clock.ts` / `scheduler.ts` — injectable `systemClock`, `createIdleScheduler`, and the manual
+- `clock.ts` / `scheduler.ts` - injectable `systemClock`, `createIdleScheduler`, and the manual
   variants.
-- `testing.ts` (`@sre/core/testing`) — `createTestHarness` + `drain`: deterministic engine with a
+- `testing.ts` (`@sre/core/testing`) - `createTestHarness` + `drain`: deterministic engine with a
   manual scheduler + fake clock.
 
 ## @sre/react layout
 
-- `defineSpeculativeUI.tsx` — the facade. Wires engine + prefetch cache + materializer + View
+- `defineSpeculativeUI.tsx` - the facade. Wires engine + prefetch cache + materializer + View
   Transitions and owns cache-aware rendering. Config takes `predict` plus optional `learn`/`observe`,
   forwarded to the engine predictor so history-learning predictors work end-to-end (see
   [decisions/0003](./decisions/0003-facade-learning-api.md)). The primary API.
-- `context.tsx` — `SpeculationProvider`, engine context.
-- `hooks.ts` — `useSpeculation`, `useTrajectory`, `useObserve`, `useSetContext`.
-- `commit.ts` — `useCommit`, `useTransitionalCommit`.
-- `materializer.ts` — `createReactMaterializer` (the materialize rung's React bridge).
-- `Stage.tsx` — `SpeculationStage`, renders the committed intent; must be inside the provider.
-- `transition.ts` — `withViewTransition`, reversible View Transitions layer.
+- `context.tsx` - `SpeculationProvider`, engine context.
+- `hooks.ts` - `useSpeculation`, `useTrajectory`, `useObserve`, `useSetContext`.
+- `commit.ts` - `useCommit`, `useTransitionalCommit`.
+- `materializer.ts` - `createReactMaterializer` (the materialize rung's React bridge).
+- `Stage.tsx` - `SpeculationStage`, renders the committed intent; must be inside the provider.
+- `transition.ts` - `withViewTransition`, reversible View Transitions layer.
 
 ## Data flow
 

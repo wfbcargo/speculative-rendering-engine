@@ -1,4 +1,4 @@
-# 0004 — Graph-activation predictor
+# 0004 - Graph-activation predictor
 
 Status: accepted
 Date: 2026-07-18
@@ -25,11 +25,11 @@ interface (`observe?`, `learn?`, `predict`) and drops into the `defineSpeculativ
 
 ### Node kinds (3)
 
-- **concept** — an abstract activity the user is engaged in. Drawn from a small **controlled
+- **concept** - an abstract activity the user is engaged in. Drawn from a small **controlled
   vocabulary** (see below). The live "how lit is each concept" vector is the compressed,
   human-readable predictive state.
-- **action** — a verb the user performs (e.g. `use`, `hover`, `compare`, `open`).
-- **component** — a renderable unit that maps to a committable `Intent`.
+- **action** - a verb the user performs (e.g. `use`, `hover`, `compare`, `open`).
+- **component** - a renderable unit that maps to a committable `Intent`.
 
 ### Concept vocabulary (controlled, activity-axis)
 
@@ -52,8 +52,8 @@ into it, do not mint freely):
 
 ### Edges (directed, weighted, two classes)
 
-- **authored** — structural, static, developer/LLM-defined. `{ from, to, weight }`.
-- **learned** — emergent, usage-created via `learn(from, to)` on commit. Directional (A->B != B->A).
+- **authored** - structural, static, developer/LLM-defined. `{ from, to, weight }`.
+- **learned** - emergent, usage-created via `learn(from, to)` on commit. Directional (A->B != B->A).
   Created only after **support threshold** N co-occurrences; start weak; weighted by confidence;
   **forget** via temporal decay; distinct class from authored; **no auto-promotion to authored** in
   this version (a v2 avenue).
@@ -147,8 +147,8 @@ Callers pass a `now` on the same time base as the injected `clock`/`signal.at`.
 
 ## Alternatives considered
 
-- **Random-walk-with-restart / personalized PageRank** — principled, degree-aware, self-normalizing,
+- **Random-walk-with-restart / personalized PageRank** - principled, degree-aware, self-normalizing,
   no hand-tuned constants. Rejected for v1 as **opaque**: it defeats the legibility goal. Filed as a
   later optimization behind the same `Predictor` interface.
-- **Logarithmic hop decay** — the intuitive "16 -> 4 -> 1" is in fact *geometric* (x1/4); true
+- **Logarithmic hop decay** - the intuitive "16 -> 4 -> 1" is in fact *geometric* (x1/4); true
   logarithmic decay is flatter and spreads too far. Rejected.

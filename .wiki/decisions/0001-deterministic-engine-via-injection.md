@@ -1,4 +1,4 @@
-# 0001 — Deterministic engine via injected clock and scheduler
+# 0001 - Deterministic engine via injected clock and scheduler
 
 Date: 2026-07-18
 Status: accepted
