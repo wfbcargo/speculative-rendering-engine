@@ -39,3 +39,15 @@ export {
 export type { Trajectory, ReturnCandidateOptions } from "./trajectory.js";
 export { createPrefetchLevel } from "./prefetch.js";
 export type { PrefetchLevelOptions } from "./prefetch.js";
+export { createGraphPredictor, defaultConcepts } from "./graph-predictor.js";
+export type {
+  GraphNodeKind,
+  GraphNode,
+  AuthoredEdge,
+  StrengtheningRule,
+  GraphDecayConfig,
+  GraphLearningConfig,
+  GraphPredictorConfig,
+  ConceptActivation,
+  GraphPredictor,
+} from "./graph-predictor.js";
