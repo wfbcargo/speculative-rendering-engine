@@ -1,4 +1,4 @@
-# 0004 — Graph-activation predictor
+# 0004 - Graph-activation predictor
 
 Status: accepted
 Date: 2026-07-18
@@ -25,11 +25,11 @@ interface (`observe?`, `learn?`, `predict`) and drops into the `defineSpeculativ
 
 ### Node kinds (3)
 
-- **concept** — an abstract activity the user is engaged in. Drawn from a small **controlled
+- **concept** - an abstract activity the user is engaged in. Drawn from a small **controlled
   vocabulary** (see below). The live "how lit is each concept" vector is the compressed,
   human-readable predictive state.
-- **action** — a verb the user performs (e.g. `use`, `hover`, `compare`, `open`).
-- **component** — a renderable unit that maps to a committable `Intent`.
+- **action** - a verb the user performs (e.g. `use`, `hover`, `compare`, `open`).
+- **component** - a renderable unit that maps to a committable `Intent`.
 
 ### Concept vocabulary (controlled, activity-axis)
 
@@ -52,8 +52,8 @@ into it, do not mint freely):
 
 ### Edges (directed, weighted, two classes)
 
-- **authored** — structural, static, developer/LLM-defined. `{ from, to, weight }`.
-- **learned** — emergent, usage-created via `learn(from, to)` on commit. Directional (A->B != B->A).
+- **authored** - structural, static, developer/LLM-defined. `{ from, to, weight }`.
+- **learned** - emergent, usage-created via `learn(from, to)` on commit. Directional (A->B != B->A).
   Created only after **support threshold** N co-occurrences; start weak; weighted by confidence;
   **forget** via temporal decay; distinct class from authored; **no auto-promotion to authored** in
   this version (a v2 avenue).
@@ -72,9 +72,11 @@ Iterative propagation from seeded nodes:
 - **Geometric per-hop decay.** `A[j] += A[i] * W[i,j] * D`, default **D = 0.25** (aggressive/local
   on purpose: a UI predictor wants tight, confident clusters, not diffuse warming; 2 hops and it is
   effectively dead).
-- **Fan-out normalization (REQUIRED).** Divide each contribution by the source node's out-degree
+- **Fan-out normalization (on by default).** Divide each contribution by the source node's out-degree
   (`* 1 / deg_out(i)`): the fan effect. Without it, hub concepts (bonded to many components)
   over-broadcast. This is the knob that makes the "spread to all nodes within report" example behave.
+  Exposed as the `fanOut` config flag (default `true`); disabling it (`fanOut: false`) is reserved for
+  demonstrating the over-broadcast failure mode and degrades prediction quality in production.
 - **Firing threshold F.** A node whose newly-received activation is below F does not propagate
   further (and, below a floor, is dropped).
 - **Hop cap.** `maxHops` (default 3) bounds propagation regardless of decay.
@@ -82,8 +84,11 @@ Iterative propagation from seeded nodes:
 ### Temporal decay (base-level)
 
 Orthogonal to relational decay. Node base-level activation and learned-edge weight decay over **time
-since last reinforcement** by a **power law** (t^-d, the ACT-R form, not exponential), so a concept
-lit a while ago cools and unused learned edges fade. Parameterized by a half-life in clock units.
+since last reinforcement** by a **hyperbolic half-life** law: `factor = halfLife / (halfLife + elapsed)`,
+equivalently `(1 + elapsed / halfLife)^-1`. This is non-exponential (activation at two half-lives is
+`1/3`, not `1/4`) and honors the configured half-life, so a concept lit a while ago cools and unused
+learned edges fade. Parameterized by a half-life in clock units (`temporalHalfLife` / `forgetHalfLife`).
+The general ACT-R power law (`t^-d` with a tunable exponent) is a later avenue behind the same config.
 
 ### Determinism (R-002)
 
@@ -147,8 +152,8 @@ Callers pass a `now` on the same time base as the injected `clock`/`signal.at`.
 
 ## Alternatives considered
 
-- **Random-walk-with-restart / personalized PageRank** — principled, degree-aware, self-normalizing,
+- **Random-walk-with-restart / personalized PageRank** - principled, degree-aware, self-normalizing,
   no hand-tuned constants. Rejected for v1 as **opaque**: it defeats the legibility goal. Filed as a
   later optimization behind the same `Predictor` interface.
-- **Logarithmic hop decay** — the intuitive "16 -> 4 -> 1" is in fact *geometric* (x1/4); true
+- **Logarithmic hop decay** - the intuitive "16 -> 4 -> 1" is in fact *geometric* (x1/4); true
   logarithmic decay is flatter and spreads too far. Rejected.

@@ -1,4 +1,4 @@
-# AGENTS.md — usage contract
+# AGENTS.md - usage contract
 
 The golden path for building a speculative UI, and the methodology agents follow in this repo.
 
@@ -19,21 +19,21 @@ observe  ->  predict  ->  prepare  ->  reveal  ->  evict
 
 Consumers build UIs with `defineSpeculativeUI` from `@sre/react`. The config is small:
 
-- `predict(context) => Prediction[]` — the single required blending point.
-- `fetch(intent) => Promise<data>` — how a speculation is prepared.
-- `render(intent, data, meta) => ReactNode` — how a committed intent is shown (`meta.warm`
+- `predict(context) => Prediction[]` - the single required blending point.
+- `fetch(intent) => Promise<data>` - how a speculation is prepared.
+- `render(intent, data, meta) => ReactNode` - how a committed intent is shown (`meta.warm`
   tells you whether it was a cache hit).
-- `renderLoading(intent) => ReactNode` — shown while a cold intent resolves.
-- optional `learn(from, to)` and `observe(signal)` — forwarded to a stateful predictor so
+- `renderLoading(intent) => ReactNode` - shown while a cold intent resolves.
+- optional `learn(from, to)` and `observe(signal)` - forwarded to a stateful predictor so
   history accumulates (see `.wiki/decisions/0003-facade-learning-api.md`).
 
 Drop to `@sre/core` only for a non-React host.
 
 ## Predictors
 
-- `createDefaultPredictor()` — first-order Markov over component transitions. The degenerate
+- `createDefaultPredictor()` - first-order Markov over component transitions. The degenerate
   case of the graph predictor: one node kind, one edge kind, weights tuned only by usage.
-- `createGraphPredictor(config)` — the typed weighted knowledge graph with spreading activation.
+- `createGraphPredictor(config)` - the typed weighted knowledge graph with spreading activation.
   The recommended predictor; see ADR 0004 for the exact config surface and algorithm.
 
 Both implement the same `Predictor` interface and drop into the facade's `predict`/`learn`/`observe`.

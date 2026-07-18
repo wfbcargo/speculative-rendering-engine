@@ -37,7 +37,16 @@ with "Cannot find module '@sre/core'" if nothing is built. Run `pnpm -r build` f
 authoritative order is build -> typecheck -> test. (Source-alias consumers like the demo can
 sidestep this via `tsconfig` `paths` / Vite aliases to source.)
 
-## Fan-out normalization is not optional
+## Fan-out normalization keeps clusters tight
 Spreading activation divides each contribution by the source node's out-degree. Without it, hub
 concepts bonded to many components over-broadcast and the whole graph lights up uniformly (no useful
-prediction). It is the knob that keeps clusters tight. See ADR 0004.
+prediction). It is on by default (`fanOut: true`); turning it off (`fanOut: false`) is only for
+demonstrating that failure mode, never production. It is the knob that keeps clusters tight. See ADR 0004.
+
+## View Transitions reject on abort
+`document.startViewTransition().finished` rejects with `InvalidStateError` when a transition is
+aborted (a new one starts before the current captures, e.g. overlapping commits). The DOM update
+has already run, so the rejection is safe to ignore, but leaving it unhandled surfaces as an
+uncaught exception in the browser. `withViewTransition` (`packages/react/src/transition.ts`) catches
+the rejection and falls back to a plain update if `startViewTransition` throws synchronously. Do not
+remove the catch. Found via browser testing of a consumer app.

@@ -15,9 +15,9 @@ pnpm -C packages/demo dev
 ## Layout
 
 ```
-packages/core     @sre/core, @sre/core/testing  — framework-agnostic engine (zero DOM, zero React)
-packages/react    @sre/react                    — React adapter + defineSpeculativeUI facade
-packages/demo     @sre/demo                     — Vite Concept Lab showcase
+packages/core     @sre/core, @sre/core/testing  - framework-agnostic engine (zero DOM, zero React)
+packages/react    @sre/react                    - React adapter + defineSpeculativeUI facade
+packages/demo     @sre/demo                     - Vite Concept Lab showcase
 .wiki/            committed project memory (design decisions, rules, conventions)
 ```
 
@@ -25,11 +25,11 @@ Dependency direction is strict: `core <- react <- demo`. The core never imports 
 
 ## Read first
 
-- `.wiki/README.md` — index into the project memory.
-- `.wiki/rules.md` — active rules (R-001..R-004). Every sub-agent gets these at spawn.
-- `.wiki/architecture.md` — package layout, module boundaries, data flow.
-- `.wiki/decisions/0004-graph-activation-predictor.md` — the star algorithm.
-- `README.md` / `AGENTS.md` — the concept and the usage contract.
+- `.wiki/README.md` - index into the project memory.
+- `.wiki/rules.md` - active rules (R-001..R-004). Every sub-agent gets these at spawn.
+- `.wiki/architecture.md` - package layout, module boundaries, data flow.
+- `.wiki/decisions/0004-graph-activation-predictor.md` - the star algorithm.
+- `README.md` / `AGENTS.md` - the concept and the usage contract.
 
 ## Rules (summary; `.wiki/rules.md` is authoritative)
 

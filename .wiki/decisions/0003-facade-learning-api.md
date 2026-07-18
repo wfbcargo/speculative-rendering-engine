@@ -1,4 +1,4 @@
-# 0003 — Facade learning API (`learn`/`observe`)
+# 0003 - Facade learning API (`learn`/`observe`)
 
 Date: 2026-07-18
 Status: accepted

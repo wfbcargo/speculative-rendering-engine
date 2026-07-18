@@ -1,25 +1,25 @@
 # Glossary
 
-- **Intent** — a predicted future; a keyed descriptor the consumer defines. `{ kind, key, payload? }`.
-- **Signal** — a raw observation fed to the engine via `observe` / `useObserve`. `{ type, at, data? }`.
-- **Prediction** — a ranked candidate: `{ intent, probability }`. The `probability` is also a throttle: it sets how far up the ladder the engine warms that bet.
-- **Predictor** — the pluggable `predict` / `learn?` / `observe?` unit the engine consults. Built-ins: `createDefaultPredictor` (first-order Markov, self-tuning) and `createGraphPredictor` (graph activation, authored + legible).
-- **Graph-activation predictor** — `createGraphPredictor`: prediction as a typed, weighted, directed knowledge graph over which a fixed spreading-activation algorithm runs (see [decisions/0004](./decisions/0004-graph-activation-predictor.md)).
-- **Concept / action / component** — the three graph node kinds: an activity (e.g. Analyzing), a verb (e.g. hover/open), and a renderable surface (only components become predictions).
-- **Spreading activation** — how the graph turns observed actions into predictions: a lit concept's activation propagates along edges with geometric decay per hop, divided by out-degree (fan-out), gated by a firing threshold and a hop cap; a separate power-law temporal decay cools nodes and forgets learned edges over time.
-- **Authored vs learned edges** — authored edges are static structural bonds; learned edges are created from usage via `learn` once a support threshold is met, and forgotten over time (a distinct class, no auto-promotion).
-- **Concept-activation vector** — `conceptActivation(now?)`: the "how lit is each concept right now" reading — the graph predictor's compressed, human-readable predictive state.
-- **Speculation** — an intent being prepared; climbs the ladder as confidence rises, demoted/evicted as it falls.
-- **Ladder / rung / level** — consumer-defined fidelity levels, each with `prepare`/`evict`. Default UI ladder: `compose -> prefetch -> materialize`.
-- **Promotion / demotion / eviction** — moving a speculation up, down, or off the ladder as predictions and budget change.
-- **Budget** — device- and concurrency-aware caps governing how many speculations occupy each rung (`BudgetPolicy`, `BudgetSnapshot`).
-- **Commit** — the moment a real intent arrives; the matching speculation is revealed instantly (warm hit) or fetched cold, wrong bets flushed. Returns `CommitResult`.
-- **Trajectory** — the committed path of intents.
-- **Return-candidate** — a recently departed trajectory state kept warm (graded by recency) so undo/redo resolve instantly. Reversibility falls out of speculation, not a separate undo stack.
-- **Warm / cold** — `meta.warm === true` means a cache hit (instant); `false` means a cold fetch just resolved.
-- **Hit rate** — the fraction of commits served warm. `metrics.hitRateHistory()` exposes a bounded rolling series for the sparkline.
-- **Materializer** — the React bridge for the materialize rung (`createReactMaterializer`).
-- **Facade** — `defineSpeculativeUI`, the high-level `@sre/react` API that wires engine + cache + materializer + transitions.
-- **Surface** — in the demo, a renderable unit mapped to a committable intent; hovering or opening it pumps its concept. The generic engine term is a component node.
-- **Clock / Scheduler** — injected time and idle-task abstractions; manual variants make the engine deterministic in tests.
-- **SRE** — Speculative Rendering Engine.
+- **Intent** - a predicted future; a keyed descriptor the consumer defines. `{ kind, key, payload? }`.
+- **Signal** - a raw observation fed to the engine via `observe` / `useObserve`. `{ type, at, data? }`.
+- **Prediction** - a ranked candidate: `{ intent, probability }`. The `probability` is also a throttle: it sets how far up the ladder the engine warms that bet.
+- **Predictor** - the pluggable `predict` / `learn?` / `observe?` unit the engine consults. Built-ins: `createDefaultPredictor` (first-order Markov, self-tuning) and `createGraphPredictor` (graph activation, authored + legible).
+- **Graph-activation predictor** - `createGraphPredictor`: prediction as a typed, weighted, directed knowledge graph over which a fixed spreading-activation algorithm runs (see [decisions/0004](./decisions/0004-graph-activation-predictor.md)).
+- **Concept / action / component** - the three graph node kinds: an activity (e.g. Analyzing), a verb (e.g. hover/open), and a renderable surface (only components become predictions).
+- **Spreading activation** - how the graph turns observed actions into predictions: a lit concept's activation propagates along edges with geometric decay per hop, divided by out-degree (fan-out), gated by a firing threshold and a hop cap; a separate hyperbolic half-life temporal decay (`halfLife / (halfLife + elapsed)`) cools nodes and forgets learned edges over time.
+- **Authored vs learned edges** - authored edges are static structural bonds; learned edges are created from usage via `learn` once a support threshold is met, and forgotten over time (a distinct class, no auto-promotion).
+- **Concept-activation vector** - `conceptActivation(now?)`: the "how lit is each concept right now" reading - the graph predictor's compressed, human-readable predictive state.
+- **Speculation** - an intent being prepared; climbs the ladder as confidence rises, demoted/evicted as it falls.
+- **Ladder / rung / level** - consumer-defined fidelity levels, each with `prepare`/`evict`. Default UI ladder: `compose -> prefetch -> materialize`.
+- **Promotion / demotion / eviction** - moving a speculation up, down, or off the ladder as predictions and budget change.
+- **Budget** - device- and concurrency-aware caps governing how many speculations occupy each rung (`BudgetPolicy`, `BudgetSnapshot`).
+- **Commit** - the moment a real intent arrives; the matching speculation is revealed instantly (warm hit) or fetched cold, wrong bets flushed. Returns `CommitResult`.
+- **Trajectory** - the committed path of intents.
+- **Return-candidate** - a recently departed trajectory state kept warm (graded by recency) so undo/redo resolve instantly. Reversibility falls out of speculation, not a separate undo stack.
+- **Warm / cold** - `meta.warm === true` means a cache hit (instant); `false` means a cold fetch just resolved.
+- **Hit rate** - the fraction of commits served warm. `metrics.hitRateHistory()` exposes a bounded rolling series for the sparkline.
+- **Materializer** - the React bridge for the materialize rung (`createReactMaterializer`).
+- **Facade** - `defineSpeculativeUI`, the high-level `@sre/react` API that wires engine + cache + materializer + transitions.
+- **Surface** - in the demo, a renderable unit mapped to a committable intent; hovering or opening it pumps its concept. The generic engine term is a component node.
+- **Clock / Scheduler** - injected time and idle-task abstractions; manual variants make the engine deterministic in tests.
+- **SRE** - Speculative Rendering Engine.

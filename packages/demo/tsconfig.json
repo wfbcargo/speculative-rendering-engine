@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "noEmit": true,
+    "baseUrl": ".",
+    "types": [],
+    "paths": {
+      "@sre/core": ["../core/src/index.ts"],
+      "@sre/react": ["../react/src/index.tsx"]
+    }
+  },
+  "include": ["src"]
+}

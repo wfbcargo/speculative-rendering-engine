@@ -1,4 +1,4 @@
-# 0002 — Framework-agnostic core, React as the first adapter
+# 0002 - Framework-agnostic core, React as the first adapter
 
 Date: 2026-07-18
 Status: accepted

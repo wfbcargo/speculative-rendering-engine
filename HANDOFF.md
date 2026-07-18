@@ -10,18 +10,18 @@ for the concept and `AGENTS.md` for the usage contract. The design memory is in 
 
 ## Where things are
 
-- `packages/core` — `@sre/core`, the framework-agnostic engine (predict / prepare / commit /
+- `packages/core` - `@sre/core`, the framework-agnostic engine (predict / prepare / commit /
   evict lifecycle, budget, metrics, injectable clock + scheduler, the Markov and graph predictors,
   and `@sre/core/testing`). Zero DOM, zero React.
-- `packages/react` — `@sre/react`, the React adapter and the `defineSpeculativeUI` facade.
-- `packages/demo` — the Vite Concept Lab showcase.
+- `packages/react` - `@sre/react`, the React adapter and the `defineSpeculativeUI` facade.
+- `packages/demo` - the Vite Concept Lab showcase.
 
 ## The design decisions that matter
 
-- `.wiki/decisions/0001` — determinism via injected clock + scheduler (R-002).
-- `.wiki/decisions/0002` — framework-agnostic core, React as the first adapter (R-004).
-- `.wiki/decisions/0003` — the facade `learn`/`observe` learning API.
-- `.wiki/decisions/0004` — the graph-activation predictor (the star). The activation math
+- `.wiki/decisions/0001` - determinism via injected clock + scheduler (R-002).
+- `.wiki/decisions/0002` - framework-agnostic core, React as the first adapter (R-004).
+- `.wiki/decisions/0003` - the facade `learn`/`observe` learning API.
+- `.wiki/decisions/0004` - the graph-activation predictor (the star). The activation math
   (spreading + fan-out + dual decay + determinism) is where the risk concentrates; it is unit
   tested exhaustively with a fake clock.
 
